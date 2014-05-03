@@ -1,4 +1,4 @@
-CONTRIBUTERS
+CONTRIBUTORS
 =============
 
 Richard Lettich 
