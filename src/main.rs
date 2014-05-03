@@ -48,17 +48,17 @@ fn webRequest(url: &str) -> ~str {
 
 struct stock {
         name : str,
-        price : float,
-        change : float,
-  	changePer : float
-  	volume : int
-  	ytd : float
-  	ytdPer : float
-        open : float,
-        high : float
-        close : float
+        price : str,
+        change : str,
+  	changePer : str,
+  	volume : str,
+  	ytd : str,
+  	ytdPer : str,
+        open : str,
+        high : str,
+        close : str,
         tick : str,
-        graph[389] : float 32
+        graph[389] : str,
 }       // 389 minutres in Trading day, one price for each minute
 
 
@@ -68,26 +68,81 @@ struct stock {
 impl stock {
         fn fromTick (tick :&str) ->  stock {
                 if str.len() > 9 {
-                        stock::error         
+                        stock::emtpy();       
                 }
                 let URL = generateURL(&tick);
                 let data = webRequest(&URL);
+                parseStock(&data)
         }
         fn search (term :&str) -> stock[] {
                 let URL = generateURL(&str);
                 let data = webRequest(&URL);
+              
                 
         }
-        fn error -> stock {
-                let x[389] = 0;
+        fn empty -> stock {
+                let x[389] = "";
                 
-                stock { name : "Not Found"
-                        price  : 0.00
-                        change : 0.00
-                        tick   : "N/A"
-                        graph[389] : x
+                stock { name : ""
+                        price  : ""
+                        change : ""
+                        changePer : ""
+                        volume : ""
+                        ytd : ""
+                        ytdPer : ""
+                        open : ""
+                        high :""
+                        close : ""
+                        tick   : ""
+                        graph[389] : ""
                 }
         }
 }
-
-
+fn parseStock(stockData :&str) -> stock {
+	let mut tempStock: stock = stock::empty();
+	let mut data = ""
+	let mut vari = "";
+	let mut inXML = false;
+	let mut inData = false;
+	for chr in stockData.chars() {
+		if chr == "<" && inData == true {
+			match vari {
+				"Name" => tempstock.name = data;
+				"Symbol" => tempstock.tick = data;
+				"LastPrice" => tempstock.tick = data;
+				"Change" => tempstock.change = data;
+				"ChangePercent" => tempstock.changePer = data;
+				"Volume" => tempstock.volume = data;
+				"ChangeYTD" => tempstock.ytd = data;
+				"ChangePercentYTD" => tempstock.ytdPer = data;
+				"High" => tempstock.high = data;
+				"Low" => tempstock.low = data;
+				"Open" => tempstock.open = data;
+				inData = false;
+				continue;
+				data += char;
+			}
+		}
+		else if chr == ">" {
+			if inXML != true {
+				inXML = true;
+				continue;
+			}
+			inData = true;
+			vari = "";
+			continue;
+		}
+		else if inData == false && inXML == true {
+			vari += chr;
+		}
+		else if inData == true && chr != "<" && chr != "Q" {
+			data += chr;
+		}
+		if chr == "Q" {
+			break;
+		}
+	}
+	tempstock;
+}
+			
+		
