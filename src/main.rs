@@ -107,21 +107,21 @@ fn parseStock(stockData :&str) -> stock {
 	for chr in stockData.chars() {
 		if chr == "<" && inData == true {
 			match vari {
-				"Name" => tempstock.name = data;
-				"Symbol" => tempstock.tick = data;
-				"LastPrice" => tempstock.tick = data;
-				"Change" => tempstock.change = data;
-				"ChangePercent" => tempstock.changePer = data;
-				"Volume" => tempstock.volume = data;
-				"ChangeYTD" => tempstock.ytd = data;
-				"ChangePercentYTD" => tempstock.ytdPer = data;
-				"High" => tempstock.high = data;
-				"Low" => tempstock.low = data;
-				"Open" => tempstock.open = data;
-				inData = false;
-				continue;
-				data += char;
+				"Name" => tempstock.name = data,
+				"Symbol" => tempstock.tick = data
+				"LastPrice" => tempstock.tick = data,
+				"Change" => tempstock.change = data,
+				"ChangePercent" => tempstock.changePer = data,
+				"Volume" => tempstock.volume = data,
+				"ChangeYTD" => tempstock.ytd = data,
+				"ChangePercentYTD" => tempstock.ytdPer = data,
+				"High" => tempstock.high = data,
+				"Low" => tempstock.low = data,
+				"Open" => tempstock.open = data
 			}
+			inData = false;
+			continue;
+			data += char;
 		}
 		else if chr == ">" {
 			if inXML != true {
@@ -138,9 +138,9 @@ fn parseStock(stockData :&str) -> stock {
 		else if inData == true && chr != "<" && chr != "Q" {
 			data += chr;
 		}
-		if chr == "Q" {
+		if chr == "Q" && inData == false{
 			break;
-		}
+		}// Q is only in closing xml tag.
 	}
 	tempstock;
 }
